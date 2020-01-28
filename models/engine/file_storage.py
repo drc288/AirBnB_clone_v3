@@ -72,7 +72,7 @@ class FileStorage:
     def get(self, cls, id):
         """ GEts an object based on its ID """
         objs = self.all(cls)
-        for obj in objs.value():
+        for obj in objs.values():
             if id == obj.id:
                 return obj
             else:
