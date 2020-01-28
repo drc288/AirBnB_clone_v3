@@ -55,7 +55,7 @@ def view_state_id(state_id):
         else:
             if not request.get_json():
                 abort(404, "Not a JSON")
-            req_var = request.json()
+            req_var = request.get_json()
             instance.name = req_var["name"]
             storage.save()
             return jsonify(instance.to_dict()), 200
