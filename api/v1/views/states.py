@@ -17,12 +17,11 @@ def view_states():
         return jsonify(new_list)
 
     if request.method == 'POST':
-        if not 'name' in request.get_json():
+        if 'name' not in request.get_json():
             abort(400, "Missing name")
         if not request.get_json():
             abort(400, "Not a JSON")
-
-        new_state = State(request.get_json())
+        new_state = State(**request.get_json())
         new_state.save()
         return jsonify(new_state.to_dict())
 
