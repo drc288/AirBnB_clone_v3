@@ -1,5 +1,5 @@
 #!/usr/bin/python3
-from flask import jsonify, abort
+from flask import jsonify, abort, request
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -16,13 +16,21 @@ def view_states():
     return jsonify(new_list)
 
 
-@app_views.route('/states/<state_id>', strict_slashes=False, methods=['GET'])
+@app_views.route('/states/<state_id>', strict_slashes=False,
+                 methods=['GET', 'DELETE'])
 def view_state_id(state_id):
     """ REtrieves the state based on the ID """
     states_obj = storage.all("State")
-
-    for state in states_obj.values():
-        if state.id == state_id:
-            id_found = state.to_dict()
-            return jsonify(id_found)
-    abort(404)
+    if request.method == 'GET':
+        for state in states_obj.values():
+            if state.id == state_id:
+                id_found = state.to_dict()
+                return jsonify(id_found)
+        abort(404)
+    if request.method == 'DELETE':
+        for state in states_obj.values():
+            if state.id == state_id:
+                storage.delete(state)
+                storage.save()
+                return jsonify({}), 200
+        abort(404)
