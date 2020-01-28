@@ -27,7 +27,7 @@ def view_states():
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False,
-                 methods=['GET', 'DELETE'])
+                 methods=['GET', 'DELETE', 'PUT'])
 def view_state_id(state_id):
     """ REtrieves the state based on the ID """
     states_obj = storage.all("State")
@@ -44,4 +44,15 @@ def view_state_id(state_id):
                 storage.delete(state)
                 storage.save()
                 return jsonify({}), 200
+        abort(404)
+
+    if request.method == 'PUT':
+        states_list  = storage.all("State")
+        if not request.json():
+            abort(400, "Not a JSON")
+        for state in states_list.values():
+            if state.id == state_id:
+                setattr(state, request.get_json())
+                storage.save()
+                return jsonify(state.to_dict())
         abort(404)
