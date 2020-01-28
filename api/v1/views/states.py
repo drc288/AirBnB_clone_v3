@@ -13,4 +13,5 @@ def view_states():
     for data in states_obj.values():
         new_list.append(data.to_dict())
 
+
     return jsonify(new_list)
