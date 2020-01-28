@@ -47,12 +47,15 @@ def view_state_id(state_id):
         abort(404)
 
     if request.method == 'PUT':
-        states_list  = storage.all("State")
-        if not request.json():
-            abort(400, "Not a JSON")
-        for state in states_list.values():
-            if state.id == state_id:
-                setattr(state, request.get_json())
-                storage.save()
-                return jsonify(state.to_dict())
-        abort(404)
+        key = "State." + state_id
+        states = storage.all("State")
+        instance = states.get(key)
+        if instance is None:
+            abort(404)
+        else:
+            if not request.get_json():
+                abort(404, "Not a JSON")
+            req_var = request.json()
+            instance.name = req_var["name"]
+            storage.save()
+            return jsonify(instance.to_dict()), 200
