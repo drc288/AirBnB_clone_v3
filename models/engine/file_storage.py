@@ -75,8 +75,8 @@ class FileStorage:
         for obj in objs.values():
             if id == obj.id:
                 return obj
-            else:
-                return None
+
+        return None
 
     def count(self, cls=None):
         """ Counts all instances of a class or all instances in a DB """
