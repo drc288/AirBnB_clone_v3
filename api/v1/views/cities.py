@@ -28,7 +28,7 @@ def view_city(state_id):
         the_state = storage.get("State", state_id)
         if the_state is None:
             abort(404)
-        new_city = City(**request.get_json(), state_id=state_id)
+        new_city = City(name=request.json.get('name', ""), state_id=state_id)
         storage.new(new_city)
         new_city.save()
         return make_response(jsonify(new_city.to_dict()), 201)
