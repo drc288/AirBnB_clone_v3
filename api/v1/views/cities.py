@@ -13,7 +13,7 @@ def view_city(state_id):
     if request.method == 'GET':
         cities = []
         the_state = storage.get('State', state_id)
-        if not the_state:
+        if the_state is None:
             abort(404)
         for city in the_state.cities:
             cities.append(city.to_dict())
