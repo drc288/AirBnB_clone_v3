@@ -54,4 +54,17 @@ def view_city_id(city_id):
         storage.save()
         return make_response(jsonify({}), 200)
 
-    
+    """ Updates a city """
+    if request.method == 'PUT':
+        the_city = storage.get('City', city_id)
+        if the_city is None:
+            abort(404)
+        if not request.json:
+            abort(400, "Not a JSON")
+
+        for req in request.json:
+            if req not in ['id', 'created_at', 'updated_at']:
+                setattr(the_city, req, request.json[req])
+        storage.save()
+        return make_response(jsonify(the_city.to_dict()), 200)
+
