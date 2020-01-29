@@ -1,6 +1,6 @@
 #!/usr/bin/python3
 """ View for states """
-from flask import jsonify, abort, request
+from flask import jsonify, abort, request, make_response
 from api.v1.views import app_views
 from models import storage
 from models.state import State
@@ -24,7 +24,7 @@ def view_states():
             abort(400, "Not a JSON")
         new_state = State(**request.get_json())
         new_state.save()
-        return jsonify(new_state.to_dict())
+        return make_response(jsonify(new_state.to_dict()), 201)
 
 
 @app_views.route('/states/<state_id>', strict_slashes=False,
@@ -60,4 +60,4 @@ def view_state_id(state_id):
             for key, value in req_var.items():
                 setattr(instance, key, value)
             storage.save()
-            return jsonify(instance.to_dict()), 200
+            return make_response(jsonify(instance.to_dict()), 200)
