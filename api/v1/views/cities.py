@@ -67,4 +67,3 @@ def view_city_id(city_id):
                 setattr(the_city, req, request.json[req])
         storage.save()
         return make_response(jsonify(the_city.to_dict()), 200)
-
