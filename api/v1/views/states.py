@@ -44,7 +44,7 @@ def view_state_id(state_id):
             if state.id == state_id:
                 storage.delete(state)
                 storage.save()
-                return jsonify({}), 200
+                return make_response(jsonify({}), 200)
         abort(404)
 
     if request.method == 'PUT':
