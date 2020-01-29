@@ -54,8 +54,8 @@ def view_state_id(state_id):
         if instance is None:
             abort(404)
         else:
-            if not request.get_json():
-                abort(404, "Not a JSON")
+            if not request.json:
+                abort(400, "Not a JSON")
             req_var = request.get_json()
             for key, value in req_var.items():
                 setattr(instance, key, value)
