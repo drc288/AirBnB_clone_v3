@@ -1,4 +1,5 @@
 #!/usr/bin/python3
+"""Create a basics routes and register the blueprint"""
 from flask import Flask, make_response, jsonify
 from os import getenv
 from models import storage
