@@ -32,6 +32,11 @@ def all_amenities():
 @app_views.route('/amenities/<amenity_id>', strict_slashes=False,
                  methods=['GET', 'DELETE', 'PUT'])
 def view_amenity_id(amenity_id):
+    """
+    GET - get the datat if the id exists
+    DELETE - delete data if the id exists
+    PUT - Update the data if the id exists
+    """
     if request.method == 'GET':
         amenity = storage.get("Amenity", amenity_id)
         if amenity is None:
