@@ -5,7 +5,8 @@ from api.v1.views import app_views
 from models import storage
 from models.state import State, City
 
-@app_views.route('states/<state_id>/cities', strict_slashes=False, methods=['GET'])
+@app_views.route('states/<state_id>/cities',
+                strict_slashes=False, methods=['GET'])
 def view_city(state_id):
     """ Get cities in a State"""
     if request.method == 'GET':
@@ -16,3 +17,12 @@ def view_city(state_id):
         for city in the_state.cities:
             cities.append(city.to_dict())
         return jsonify(cities)
+
+@app_views.route('/cities/<city_id>', strict_slashes=False,
+                methods=['GET'])
+def view_city_id(city_id):
+    """ gets a city """
+    the_city = storage.get("City", city_id)
+    if the_city is None:
+        abort(404)
+    return jsonify(the_city.dict())
