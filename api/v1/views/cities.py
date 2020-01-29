@@ -7,7 +7,7 @@ from models.state import State, City
 
 
 @app_views.route('states/<state_id>/cities',
-                 strict_slashes=False, methods=['GET'])
+                 strict_slashes=False, methods=['GET', 'POST'])
 def view_city(state_id):
     """ Get cities in a State"""
     if request.method == 'GET':
@@ -18,6 +18,20 @@ def view_city(state_id):
         for city in the_state.cities:
             cities.append(city.to_dict())
         return jsonify(cities)
+
+    if request.method == 'POST':
+        if not request.json:
+            abort(400, "Not a JSON")
+        if "name" not in request.get_json():
+            abort(400, "Missing name")
+
+        the_state = storage.get("State", state_id)
+        if the_state is None:
+            abort(404)
+        new_city = City(**request.get_json(), state_id=state_id)
+        storage.new(new_city)
+        new_city.save()
+        return make_response(jsonify(new_city.to_dict()), 201)
 
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
@@ -39,3 +53,5 @@ def view_city_id(city_id):
         the_city.delete()
         storage.save()
         return make_response(jsonify({}), 200)
+
+    
