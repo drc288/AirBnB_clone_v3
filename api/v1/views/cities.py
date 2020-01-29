@@ -35,7 +35,7 @@ def view_city(state_id):
 
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
-                 methods=['GET', 'DELETE'])
+                 methods=['GET', 'DELETE', 'PUT'])
 def view_city_id(city_id):
     """ gets a city """
 
