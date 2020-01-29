@@ -62,6 +62,7 @@ def view_city_id(city_id):
         if not request.json:
             abort(400, "Not a JSON")
 
+        req_var = request.get_json()
         for key, value in req_var.items():
                 if key not in ['id', 'created_at', 'updated_at']:
                     setattr(the_city, key, value)
