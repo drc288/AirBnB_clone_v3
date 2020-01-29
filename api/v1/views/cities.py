@@ -10,7 +10,8 @@ def view_city(state_id):
     """ Get cities in a State"""
     if request.method == 'GET':
         cities = []
-        the_state = storage.get("State", state_id)
+        the_state = storage.get('State', state_id)
+        print(the_state)
         if not the_state:
             abort(404)
         for city in the_state.cities:
