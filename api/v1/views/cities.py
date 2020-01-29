@@ -62,9 +62,9 @@ def view_city_id(city_id):
         if not request.json:
             abort(400, "Not a JSON")
 
-        for req in request.json:
-            if req not in ['id', 'created_at', 'updated_at']:
-                setattr(the_city, req, request.json[req])
+        for key, value in req_var.items():
+                if key not in ['id', 'created_at', 'updated_at']:
+                    setattr(the_city, key, value)
         storage.save()
         return make_response(jsonify(the_city.to_dict()), 200)
 
