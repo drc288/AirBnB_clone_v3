@@ -19,6 +19,7 @@ def view_city(state_id):
             cities.append(city.to_dict())
         return jsonify(cities)
 
+
 @app_views.route('/cities/<city_id>', strict_slashes=False,
                 methods=['GET'])
 def view_city_id(city_id):
@@ -26,4 +27,4 @@ def view_city_id(city_id):
     the_city = storage.get("City", city_id)
     if the_city is None:
         abort(404)
-    return jsonify(the_city.dict())
+    return jsonify(the_city.to_dict())
