@@ -21,10 +21,21 @@ def view_city(state_id):
 
 
 @app_views.route('/cities/<city_id>', strict_slashes=False,
-                methods=['GET'])
+                 methods=['GET', 'DELETE'])
 def view_city_id(city_id):
     """ gets a city """
-    the_city = storage.get("City", city_id)
-    if the_city is None:
-        abort(404)
-    return jsonify(the_city.to_dict())
+
+    if request.method == 'GET':
+        the_city = storage.get("City", city_id)
+        if the_city is None:
+            abort(404)
+        return jsonify(the_city.to_dict())
+
+    """ Deletes a city based on the ID """
+    if request.method == 'DELETE':
+        the_city = storage.get("City", city_id)
+        if the_city is None:
+            abort(404)
+        the_city.delete()
+        storage.save()
+        return make_response(jsonify({}), 200)
