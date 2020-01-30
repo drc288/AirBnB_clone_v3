@@ -81,4 +81,4 @@ def places_id(place_id):
                 if data not in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
                     setattr(instance, key, value)
             storage.save()
-            return make_response(ify(instance.to_dict()), 200)
+            return make_response(jsonify(instance.to_dict()), 200)
