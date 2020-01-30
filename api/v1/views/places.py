@@ -31,15 +31,14 @@ def all_places(city_id):
             abort(404)
         if 'user_id' not in request.json:
             abort(400, 'Missing user_id')
-        if 'city_id' not in request.json:
-            abort(400, 'Missing city_id')
         if 'name' not in request.json:
             abort(400, 'Missing name')
 
         user = storage.get("User", request.get_json()["user_id"])
         if user is None:
             abort(404)
-        place = Place(**request.get_json())
+        else:
+            place = Place(**request.get_json())
         storage.new(place)
         place.save()
         return make_response(jsonify(place.to_dict()), 201)
