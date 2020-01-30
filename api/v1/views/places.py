@@ -37,8 +37,7 @@ def all_places(city_id):
         user = storage.get("User", request.get_json()["user_id"])
         if user is None:
             abort(404)
-        else:
-            place = Place(**request.get_json())
+        place = Place(**request.get_json())
         storage.new(place)
         place.save()
         return make_response(jsonify(place.to_dict()), 201)
