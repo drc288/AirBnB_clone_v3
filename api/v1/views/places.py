@@ -57,3 +57,27 @@ def places_id(place_id):
             abort(404)
         else:
             return jsonify(place.to_dict())
+
+    if request.method == 'DELETE':
+        place = storage.get("Place", place_id)
+        if place is None:
+            abort(404)
+        else:
+            storage.delete(place)
+            storage.save()
+            return make_response(jsonify({}), 200)
+
+    if request.method == 'PUT':
+        places = storage.all("Place")
+        instance = places.get("Place.{}".format(place_id))
+        if instance is None:
+            abort(404)
+        else:
+            if not request.json:
+                abort(400, "Not a JSON")
+
+            my_json = request.get_json()
+            for key, value in my_json.items():
+                setattr(instance, key, value)
+            storage.save()
+            return make_response(ify(instance.to_dict()), 200)
