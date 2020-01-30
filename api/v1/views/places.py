@@ -23,9 +23,13 @@ def all_places(city_id):
         return jsonify(new_list)
 
     if request.method == 'POST':
+        if not request.json:
+            abort(400, "Not a JSON")
 
 
-@app_views.route('/places/<place_id>', methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
+
+@app_views.route('/places/<place_id>',
+                 methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
 def places_id(place_id):
     """
     GET - get all the places if id exists
@@ -33,3 +37,8 @@ def places_id(place_id):
     PUT - update data if id exists
     """
     if request.method == 'GET':
+        place = storage.get("Place", place_id)
+        if place is None:
+            abort(404)
+        else:
+            return jsonify(place.to_dict())
