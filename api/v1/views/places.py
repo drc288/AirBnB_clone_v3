@@ -23,9 +23,24 @@ def all_places(city_id):
         return jsonify(new_list)
 
     if request.method == 'POST':
+        cities = storage.all("City")
         if not request.json:
             abort(400, "Not a JSON")
+        searching = "City.{}".format(city_id)
+        if searching not in cities:
+            abort(404)
+        if 'user_id' not in request.json:
+            abort(400, 'Missing user_id')
+        if 'name' not in request.json:
+            abort(400, 'Missing name')
 
+        user = storage.get("User", request.get_json()["user_id"])
+        if user is None:
+            abort(404)
+        else:
+            place = Place(**request.get_json())
+        place.save()
+        return make_response(jsonify(place.to_dict()), 201)
 
 
 @app_views.route('/places/<place_id>',
