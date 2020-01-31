@@ -31,7 +31,7 @@ def all_reviews(place_id):
         if "user_id" not in request.json:
             abort(400, "Missing user_id")
         if "text" not in request.json:
-            abor(400, "Missing text")
+            abort(400, "Missing text")
 
         user = storage.get("User", request.get_json()["user_id"])
         if user is None:
@@ -73,13 +73,12 @@ def review_id(review_id):
         if instance is None:
             abort(404)
         else:
-            if not request.josn:
+            if not request.json:
                 abort(400, "Not a JSON")
 
             my_json = request.get_json()
             for key, value in my_json.items():
-                if key not in ['id', 'user_id', 'place_id',
-                               'created_at', 'updated_at']:
+                if key not in ['id', 'user_id', 'created_at', 'updated_at']:
                     setattr(instance, key, value)
             storage.save()
             return make_response(jsonify(instance.to_dict()), 200)
