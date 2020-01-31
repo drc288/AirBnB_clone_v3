@@ -77,9 +77,9 @@ def places_id(place_id):
                 abort(400, "Not a JSON")
 
             my_json = request.get_json()
-            for datat in my_json:
-                if data not in ['id', 'user_id', 'city_id',
-                                'created_at', 'updated_at']:
+            for key, value in my_json.items():
+                if key not in ['id', 'user_id', 'city_id',
+                               'created_at', 'updated_at']:
                     setattr(instance, key, value)
             storage.save()
             return make_response(jsonify(instance.to_dict()), 200)
