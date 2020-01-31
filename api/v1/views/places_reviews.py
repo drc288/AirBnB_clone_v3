@@ -1,84 +1,84 @@
 #!/usr/bin/python3
-"""API RESTFull place"""
+"""API RESTFull reviews"""
 from flask import jsonify, abort, request, make_response
 from api.v1.views import app_views
 from models import storage
-from models.place import Place
+from models.review import Review
 
 
-@app_views.route('cities/<city_id>/places', methods=['GET', 'POST'],
+@app_views.route('places/<place_id>/reviews', methods=['GET', 'POST'],
                  strict_slashes=False)
-def all_places(city_id):
+def all_reviews(place_id):
     """
-    GET - get all places if the id exists
-    POST - create a place if the id exists
+    GET - get all reviews
+    POST - create new review
     """
     if request.method == 'GET':
         new_list = []
-        data_city = storage.get("City", city_id)
-        if data_city is None:
+        data_place = storage.get("Place", place_id)
+        if data_place is None:
             abort(404)
-        for cities in data_city.places:
-            new_list.append(cities.to_dict())
+        for state in data_place.reviews:
+            new_list.append(state.to_dict())
         return jsonify(new_list)
 
     if request.method == 'POST':
-        city = storage.get("City", city_id)
-        if city is None:
+        place = storage.get("Place", place_id)
+        if place is None:
             abort(404)
         if not request.json:
             abort(400, "Not a JSON")
         if "user_id" not in request.json:
             abort(400, "Missing user_id")
-        if "name" not in request.json:
-            abort(400, "Missing name")
+        if "text" not in request.json:
+            abor(400, "Missing text")
 
         user = storage.get("User", request.get_json()["user_id"])
         if user is None:
             abort(404)
         new_data = request.get_json()
-        new_data["city_id"] = city_id
-        place = Place(**new_data)
-        storage.new(place)
-        place.save()
-        return make_response(jsonify(place.to_dict()), 201)
+        new_data["place_id"] = place_id
+        review = Review(**new_data)
+        storage.new(review)
+        review.save()
+        return make_response(jsonify(review.to_dict()), 201)
 
 
-@app_views.route('/places/<place_id>',
+@app_views.route('/reviews/<review_id>',
                  methods=['GET', 'PUT', 'DELETE'], strict_slashes=False)
-def places_id(place_id):
+def review_id(review_id):
     """
-    GET - get all the places if id exists
-    DELETE - delete the place if id exists
-    PUT - update data if id exists
+    GET - get all review if the id exists
+    DELETE - delete the revew if id exists
+    PUT - update the data if the id exists
     """
     if request.method == 'GET':
-        place = storage.get("Place", place_id)
-        if place is None:
+        review = storage.get("Review", review_id)
+        if review is None:
             abort(404)
         else:
-            return jsonify(place.to_dict())
+            return jsonify(review.to_dict())
 
     if request.method == 'DELETE':
-        place = storage.get("Place", place_id)
-        if place is None:
+        review = storage.get("Review", review_id)
+        if review is None:
             abort(404)
         else:
-            place.delete()
+            review.delete()
             storage.save()
             return make_response(jsonify({}), 200)
 
     if request.method == 'PUT':
-        instance = storage.get("Place", place_id)
+        instance = storage.get("Review", review_id)
         if instance is None:
             abort(404)
         else:
-            if not request.json:
+            if not request.josn:
                 abort(400, "Not a JSON")
 
             my_json = request.get_json()
             for key, value in my_json.items():
-                if key not in ['id', 'user_id', 'city_id',
+                if key not in ['id', 'user_id', 'place_id',
                                'created_at', 'updated_at']:
                     setattr(instance, key, value)
             storage.save()
