@@ -36,7 +36,7 @@ def all_places(city_id):
         user = storage.get("User", request.get_json()["user_id"])
         if user is None:
             abort(404)
-        new_data =  request.get_json()
+        new_data = request.get_json()
         new_data["city_id"] = city_id
         place = Place(**new_data)
         storage.new(place)
@@ -64,7 +64,7 @@ def places_id(place_id):
         if place is None:
             abort(404)
         else:
-            storage.delete(place)
+            place.delete()
             storage.save()
             return make_response(jsonify({}), 200)
 
@@ -78,7 +78,8 @@ def places_id(place_id):
 
             my_json = request.get_json()
             for datat in my_json:
-                if data not in ['id', 'user_id', 'city_id', 'created_at', 'updated_at']:
+                if data not in ['id', 'user_id', 'city_id',
+                                'created_at', 'updated_at']:
                     setattr(instance, key, value)
             storage.save()
             return make_response(jsonify(instance.to_dict()), 200)
