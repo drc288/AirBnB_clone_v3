@@ -81,7 +81,6 @@ class DBStorage:
         for obj in objs:
             if id == obj.id:
                 return obj
-        
         return None
 
     def count(self, cls=None):
